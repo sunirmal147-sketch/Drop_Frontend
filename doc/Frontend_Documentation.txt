@@ -1,0 +1,7 @@
+Frontend Documentation
+Overview
+Tech Stack: Next.js, React, TypeScript, Tailwind CSS, Redux Toolkit, TanStack Query, Framer Motion, GSAP, Docker, GitHub Actions, Vercel.
+Sections
+1. Project Overview2. Architecture3. Folder Structure4. UI Design System5. Authentication6. Products7. Cart8. Wishlist9. Checkout10. Tracking11. Blogs/CMS12. Admin UI13. State Management14. API Integration15. Animations16. SEO17. Testing18. Performance19. Deployment20. Coding Standards
+Implementation Goal
+Build a production-ready frontend with reusable components, feature-based architecture, SSR/ISR, accessibility, responsive UI, and enterprise coding standards.
