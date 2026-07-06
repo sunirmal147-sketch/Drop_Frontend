@@ -231,7 +231,7 @@ function ProductsPageContent() {
                     <SearchX className="w-10 h-10 text-on-surface-variant opacity-60" />
                   </div>
                   <h3 className="font-headline-lg mb-2 text-on-surface">No products found</h3>
-                  <p className="text-on-surface-variant max-w-[384px] mx-auto mb-8 font-body-md text-lg">We couldn't find anything matching your current filters. Try adjusting your selection.</p>
+                  <p className="text-on-surface-variant max-w-[384px] mx-auto mb-8 font-body-md text-lg">We couldn&apos;t find anything matching your current filters. Try adjusting your selection.</p>
                   <button 
                     onClick={() => setFilter('category', null)} 
                     className="bg-primary text-on-primary px-8 py-4 rounded-xl font-label-md hover:bg-primary-container hover:text-on-primary-container transition-all active:scale-95 shadow-lg shadow-primary/20"

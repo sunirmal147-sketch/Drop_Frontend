@@ -17,14 +17,14 @@ export function SpinningWheel() {
   const [isSpinning, setIsSpinning] = useState(false);
   const [result, setResult] = useState<string | null>(null);
   const [rotationAngle, setRotationAngle] = useState(0);
-  const { spinsAvailable, useSpin, claimCoupon } = useGamificationStore();
+  const { spinsAvailable, useSpin: consumeSpin, claimCoupon } = useGamificationStore();
 
   const handleSpin = () => {
     if (spinsAvailable <= 0 || isSpinning) return;
     
     setIsSpinning(true);
     setResult(null);
-    useSpin();
+    consumeSpin();
 
     // Random prize index (0 to PRIZES.length - 1)
     const prizeIndex = Math.floor(Math.random() * PRIZES.length);

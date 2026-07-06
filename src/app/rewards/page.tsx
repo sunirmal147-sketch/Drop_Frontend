@@ -134,7 +134,7 @@ export default function RewardsPage() {
           ) : (
             <div className="text-center py-24 bg-surface-container-low rounded-3xl border border-dashed border-outline-variant/50">
               <p className="font-body-md text-on-surface-variant text-lg max-w-[448px] mx-auto">
-                You haven't unlocked any offers yet. Spin the wheel or scratch a card to begin.
+                You haven&apos;t unlocked any offers yet. Spin the wheel or scratch a card to begin.
               </p>
             </div>
           )}

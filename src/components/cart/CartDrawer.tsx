@@ -44,7 +44,7 @@ export function CartDrawer() {
                 <div className="h-full flex flex-col items-center justify-center text-center opacity-60">
                   <ShoppingBag className="w-16 h-16 mb-4 text-on-surface-variant" />
                   <p className="font-headline-sm mb-2 text-on-surface">Your cart is empty.</p>
-                  <p className="font-body-md text-on-surface-variant">Looks like you haven't added anything yet.</p>
+                  <p className="font-body-md text-on-surface-variant">Looks like you haven&apos;t added anything yet.</p>
                   <button 
                     onClick={() => setCartOpen(false)}
                     className="mt-8 text-primary font-label-md hover:underline"

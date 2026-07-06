@@ -53,7 +53,7 @@ export function DealPopup() {
               50% OFF Everything
             </h2>
             <p className="text-gray-500 dark:text-gray-400">
-              Don't miss out on our biggest sale of the month. Use code <strong className="text-black dark:text-white">FLASH50</strong> at checkout.
+              Don&apos;t miss out on our biggest sale of the month. Use code <strong className="text-black dark:text-white">FLASH50</strong> at checkout.
             </p>
           </div>
 

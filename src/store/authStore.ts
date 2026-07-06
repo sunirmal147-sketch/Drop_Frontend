@@ -53,8 +53,9 @@ export const useAuthStore = create<AuthState>()(
             isLoading: false,
             error: null,
           });
-        } catch (error: any) {
-          const message = error.response?.data?.message || 'Login failed. Please check your credentials.';
+        } catch (error: unknown) {
+          const err = error as { response?: { data?: { message?: string } } };
+          const message = err.response?.data?.message || 'Login failed. Please check your credentials.';
           set({ error: message, isLoading: false });
           throw error;
         }
@@ -66,8 +67,9 @@ export const useAuthStore = create<AuthState>()(
           await api.post('/auth/register', { name, email, password });
           set({ isLoading: false, error: null });
           // Registration typically doesn't auto-login if email verification is required
-        } catch (error: any) {
-          const message = error.response?.data?.message || 'Registration failed.';
+        } catch (error: unknown) {
+          const err = error as { response?: { data?: { message?: string } } };
+          const message = err.response?.data?.message || 'Registration failed.';
           set({ error: message, isLoading: false });
           throw error;
         }

@@ -25,10 +25,10 @@ interface ProductState {
   };
   
   // Actions
-  fetchProducts: (query?: Record<string, any>) => Promise<void>;
+  fetchProducts: (query?: Record<string, unknown>) => Promise<void>;
   fetchTrendingProducts: () => Promise<void>;
   fetchProductBySlug: (slug: string) => Promise<void>;
-  setFilter: (key: keyof ProductState['filters'], value: any) => void;
+  setFilter: (key: keyof ProductState['filters'], value: unknown) => void;
   clearFilters: () => void;
 }
 
@@ -58,7 +58,8 @@ export const useProductStore = create<ProductState>((set, get) => ({
 
       const response = await api.get(`/products?${params.toString()}`);
       set({ products: response.data.data.products, isLoading: false });
-    } catch (err: any) {
+    } catch (error: unknown) {
+      const err = error as Error;
       set({ error: err.message || 'Failed to fetch products', isLoading: false });
     }
   },
@@ -70,7 +71,8 @@ export const useProductStore = create<ProductState>((set, get) => ({
       // We limit to 4 for the trending section.
       const response = await api.get('/products?sort=-createdAt&limit=4');
       set({ trendingProducts: response.data.data.products, isLoading: false });
-    } catch (err: any) {
+    } catch (error: unknown) {
+      const err = error as Error;
       set({ error: err.message || 'Failed to fetch trending products', isLoading: false });
     }
   },
@@ -84,7 +86,8 @@ export const useProductStore = create<ProductState>((set, get) => ({
         productDetails: { ...state.productDetails, [slug]: product },
         isLoading: false,
       }));
-    } catch (err: any) {
+    } catch (error: unknown) {
+      const err = error as Error;
       set({ error: err.message || 'Failed to fetch product details', isLoading: false });
     }
   },

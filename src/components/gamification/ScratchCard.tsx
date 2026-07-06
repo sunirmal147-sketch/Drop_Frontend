@@ -9,14 +9,9 @@ const PRIZES = ["$5 OFF", "Free Shipping", "15% OFF", "Try Again"];
 export function ScratchCard() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isScratched, setIsScratched] = useState(false);
-  const [prize, setPrize] = useState<string>("");
-  const { scratchCards, useScratchCard, claimCoupon } = useGamificationStore();
+  const [prize, setPrize] = useState<string>(() => PRIZES[Math.floor(Math.random() * PRIZES.length)]);
+  const { scratchCards, useScratchCard: consumeScratchCard, claimCoupon } = useGamificationStore();
   const [isActive, setIsActive] = useState(false);
-
-  useEffect(() => {
-    // Pick a random prize on mount
-    setPrize(PRIZES[Math.floor(Math.random() * PRIZES.length)]);
-  }, [scratchCards]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -101,7 +96,7 @@ export function ScratchCard() {
         if (prize !== "Try Again") {
           claimCoupon(prize);
         }
-        useScratchCard();
+        consumeScratchCard();
         // Clear the entire canvas
         ctx.clearRect(0, 0, canvas.width, canvas.height);
       }
