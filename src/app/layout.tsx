@@ -1,21 +1,26 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Plus_Jakarta_Sans, Inter } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import "./globals.css";
+import { Toaster } from "sonner";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const plusJakartaSans = Plus_Jakarta_Sans({
+  variable: "--font-plus-jakarta",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
 });
+
+import { ThemeProvider } from "@/components/ThemeProvider";
+import { CartDrawer } from "@/components/cart/CartDrawer";
+import SmoothScroll from "@/components/SmoothScroll";
 
 export const metadata: Metadata = {
-  title: "Premium E-Commerce",
-  description: "Redefine your style with our premium collection.",
+  title: "LUXE | Premium E-Commerce",
+  description: "The silent precision of modern elegance.",
 };
 
 export default function RootLayout({
@@ -26,13 +31,25 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${plusJakartaSans.variable} ${inter.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col bg-black text-white">
-        <Navbar />
-        <main className="flex-1">
-          {children}
-        </main>
+      <body className="min-h-full flex flex-col transition-colors duration-300">
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+          <Navbar />
+          <SmoothScroll>
+            <main className="flex-1 flex flex-col w-full h-full">
+              {children}
+            </main>
+          </SmoothScroll>
+          <CartDrawer />
+          <Toaster 
+            position="bottom-right" 
+            toastOptions={{
+              className: 'font-body-md glass-card border-none',
+            }}
+          />
+        </ThemeProvider>
       </body>
     </html>
   );

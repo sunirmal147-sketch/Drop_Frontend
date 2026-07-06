@@ -1,124 +1,280 @@
-"use client";
-import { motion, useScroll, useTransform } from "framer-motion";
-import { ArrowRight, ShoppingBag, Watch, Laptop } from "lucide-react";
-import Image from "next/image";
+'use client';
+
+import { useEffect, useRef } from 'react';
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
+import Link from 'next/link';
+import Image from 'next/image';
+import { useProductStore } from '@/store/productStore';
+import { useCartStore } from '@/store/cartStore';
+import { ShoppingCart } from 'lucide-react';
+import { toast } from 'sonner';
+import ProductSkeleton from '@/components/products/ProductSkeleton';
 
 export default function Home() {
-  const { scrollYProgress } = useScroll();
-  const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
+  const { trendingProducts, fetchTrendingProducts, isLoading } = useProductStore();
+  const { addItem, setCartOpen } = useCartStore();
+  const heroRef = useRef<HTMLDivElement>(null);
+  
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"]
+  });
+
+  const y1 = useTransform(scrollYProgress, [0, 1], [0, 200]);
+  const y2 = useTransform(scrollYProgress, [0, 1], [0, 100]);
+  const y3 = useTransform(scrollYProgress, [0, 1], [0, 150]);
+
+  useEffect(() => {
+    fetchTrendingProducts();
+  }, [fetchTrendingProducts]);
 
   return (
-    <main className="min-h-screen bg-black text-white selection:bg-accent selection:text-black">
-      {/* Hero Section */}
-      <section className="relative h-screen flex flex-col items-center justify-center overflow-hidden">
-        <motion.div 
-          className="absolute inset-0 z-0 opacity-40"
-          style={{ y }}
-        >
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black z-10" />
-          <Image 
-            src="/images/fashion.png" 
-            alt="Premium Fashion" 
-            fill 
-            className="object-cover object-top"
-            priority
-          />
-        </motion.div>
-
-        <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
-          <motion.h1 
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="text-5xl md:text-8xl font-bold mb-6 tracking-tighter gradient-text"
-          >
-            Redefine Your Style
-          </motion.h1>
-          <motion.p 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-            className="text-lg md:text-2xl text-gray-400 mb-10 max-w-2xl mx-auto"
-          >
-            Discover our curated collection of premium products, designed for the modern lifestyle.
-          </motion.p>
-          <motion.button
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-            className="bg-white text-black px-8 py-4 rounded-full font-semibold text-lg hover:bg-gray-200 transition-colors flex items-center gap-2 mx-auto"
-          >
-            Shop Now <ArrowRight size={20} />
-          </motion.button>
-        </div>
-      </section>
-
-      {/* Collage Section */}
-      <section className="py-32 px-4 md:px-10 max-w-7xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.8 }}
-          className="mb-20 text-center"
-        >
-          <h2 className="text-4xl md:text-6xl font-bold mb-4">Curated Excellence</h2>
-          <p className="text-gray-400 text-xl">The finest categories for you.</p>
-        </motion.div>
-
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 h-[800px]">
-          {/* Fashion Block */}
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="md:col-span-8 relative rounded-3xl overflow-hidden group cursor-pointer"
-          >
-            <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors z-10" />
-            <Image src="/images/fashion.png" alt="Fashion" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
-            <div className="absolute bottom-10 left-10 z-20 glass p-6 rounded-2xl">
-              <ShoppingBag className="mb-3 text-accent" size={32} />
-              <h3 className="text-3xl font-bold mb-2">Fashion</h3>
-              <p className="text-gray-300">Explore the latest trends</p>
+    <div className="pt-8">
+      {/* Hero Collage Section */}
+      <section ref={heroRef} className="max-w-[1440px] mx-auto px-6 py-10 overflow-hidden">
+        <div className="grid grid-cols-12 grid-rows-2 gap-4 h-[716px] md:h-[870px]">
+          {/* Main Large Feature: Fashion */}
+          <div className="col-span-12 md:col-span-7 row-span-2 relative overflow-hidden rounded-2xl group hero-collage-item">
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10"></div>
+            <motion.div 
+              className="absolute -inset-10 bg-cover bg-center transition-transform duration-1000 group-hover:scale-110" 
+              initial={{ scale: 1.1 }}
+              animate={{ scale: 1 }}
+              transition={{ duration: 1.5, ease: "easeOut" }}
+              style={{ y: y1, backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuCX3F2C5aka18RZtJ5yd0KTYBdvMe5_MfVP3oGZUOoPNZZbiBz1rEf_GKz6xuqbhcDD7dppvssJtqkHbIsIkEXAjhgn3aZYWtNJFH2zli46um0RS_amfF07Vht4yWURf0PcAV2nezBDOctbWn4N6xdZNGhsPUILKIlFR5TGIC7FD5u5o9CEyEKS1ZsZAzt7PeCUvXzSSHSQQ2xcK1ZG9_8zIY4zpja8zjB-FshWasieAJrAQVUm-DhX')" }}
+            ></motion.div>
+            <div className="absolute bottom-10 left-10 z-20">
+              <span className="bg-primary px-2 py-1 rounded-full text-white font-label-md text-[10px] tracking-widest uppercase mb-2 inline-block">Fashion</span>
+              <h1 className="font-display-lg-mobile md:font-display-lg text-white mb-4">The New <br />Standard</h1>
+              <Link href="/products?category=fashion">
+                <button className="bg-white text-black px-8 py-4 rounded-xl font-label-md hover:bg-primary-container hover:text-white transition-all duration-300 active:scale-95">Explore Collection</button>
+              </Link>
             </div>
-          </motion.div>
-
-          <div className="md:col-span-4 grid grid-rows-2 gap-6">
-            {/* Tech Block */}
+          </div>
+          
+          {/* Secondary: Tech */}
+          <div className="col-span-12 md:col-span-5 row-span-1 relative overflow-hidden rounded-2xl group hero-collage-item">
+            <div className="absolute inset-0 bg-gradient-to-r from-black/40 to-transparent z-10"></div>
             <motion.div 
-              initial={{ opacity: 0, x: 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="relative rounded-3xl overflow-hidden group cursor-pointer"
-            >
-              <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors z-10" />
-              <Image src="/images/gadget.png" alt="Tech" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
-              <div className="absolute bottom-6 left-6 z-20">
-                <Laptop className="mb-2 text-white" size={24} />
-                <h3 className="text-2xl font-bold">Tech</h3>
-              </div>
-            </motion.div>
+              className="absolute -inset-10 bg-cover bg-center transition-transform duration-1000 group-hover:scale-110" 
+              initial={{ scale: 1.1 }}
+              animate={{ scale: 1 }}
+              transition={{ duration: 1.5, ease: "easeOut", delay: 0.2 }}
+              style={{ y: y2, backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuAogO9w9FGXtQ5_ueTVMaY9Na3X2_URRO5zqqRVwd0KkzZG3NkzviHo_Idw5_1l1oXHtm8CP2-jok1K90zuX6CK_B42NlUtTiJcfwxfjoOgc09jWcL-_ZZMsqQ6M7aNlaoYywD__XwXyfMhmmgwTS1k65vsZlAhiViLl4IbU5oXMjcEO-vG-fTG2xpKGLTQfMY6n9CBeW-0wkh7TldqfRzf-nW8_tdkpW8yXD3_cPYBzm1rgEKdW4Pd')" }}
+            ></motion.div>
+            <div className="absolute inset-y-0 left-8 flex flex-col justify-center z-20">
+              <span className="text-white/80 font-label-md text-[10px] tracking-widest uppercase mb-1">Tech</span>
+              <h2 className="font-headline-xl text-white">Precision Gear</h2>
+              <Link href="/products?category=tech" className="text-white font-label-md underline underline-offset-8 mt-2 hover:text-primary-fixed transition-colors">Shop Tech</Link>
+            </div>
+          </div>
 
-            {/* Accessories Block */}
+          {/* Tertiary: Accessories */}
+          <div className="col-span-12 md:col-span-5 row-span-1 relative overflow-hidden rounded-2xl group hero-collage-item">
+            <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors z-10"></div>
             <motion.div 
-              initial={{ opacity: 0, x: 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="relative rounded-3xl overflow-hidden group cursor-pointer"
-            >
-              <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors z-10" />
-              <Image src="/images/watch.png" alt="Accessories" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
-              <div className="absolute bottom-6 left-6 z-20">
-                <Watch className="mb-2 text-white" size={24} />
-                <h3 className="text-2xl font-bold">Accessories</h3>
-              </div>
-            </motion.div>
+              className="absolute -inset-10 bg-cover bg-center transition-transform duration-1000 group-hover:scale-110" 
+              initial={{ scale: 1.1 }}
+              animate={{ scale: 1 }}
+              transition={{ duration: 1.5, ease: "easeOut", delay: 0.4 }}
+              style={{ y: y3, backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuAMIlOSJ-S3DfXE-j911pCpmUNRzybO7vqYhVUOGfITb6LY4z2ZDAXERcI1DDqicxgk8KtzlZZvUHx32H1UnWVA7W6QI8Gvvxwxiir0iWbbgf9lo5LOkgEvzpfiyZcwADXabTBFU2y83_-ovZ4WihZXOCJ-ZhKCguK7_xvQJaaDVrVCbjKB4YYgxXyBYTYX2st8aSOe-ARW-20QnoikN7qrpzam9QQvqbAxidVt1c5Gw6tmmn8LCzRb')" }}
+            ></motion.div>
+            <div className="absolute top-8 right-8 text-right z-20">
+              <span className="text-white font-label-md text-[10px] tracking-widest uppercase mb-1 block">Accessories</span>
+              <h2 className="font-headline-xl text-white">Curated Details</h2>
+            </div>
           </div>
         </div>
       </section>
-    </main>
+
+      {/* The Essence of LUXE (Editorial) */}
+      <section className="py-24 md:py-40 max-w-4xl mx-auto px-6 text-center">
+        <motion.h2 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="font-display-lg-mobile md:font-display-sm text-on-surface mb-8"
+        >
+          Redefining the baseline.
+        </motion.h2>
+        <motion.p 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.1 }}
+          className="font-body-lg text-on-surface-variant text-xl md:text-2xl leading-relaxed"
+        >
+          We architect artifacts that bridge the gap between high-performance technology and high-fashion aesthetics. Uncompromising material quality combined with silent, seamless utility.
+        </motion.p>
+      </section>
+
+      {/* Featured Categories - Sticky Overlap */}
+      <section className="max-w-[1440px] mx-auto px-6 py-10 mb-40 relative">
+        <div className="flex justify-between items-end mb-16">
+          <h2 className="font-headline-xl text-on-surface text-3xl md:text-5xl">Explore by Discipline</h2>
+        </div>
+        
+        <div className="flex flex-col gap-8 relative">
+          {[
+            { 
+              title: "Technology", 
+              img: "https://lh3.googleusercontent.com/aida-public/AB6AXuAMIlOSJ-S3DfXE-j911pCpmUNRzybO7vqYhVUOGfITb6LY4z2ZDAXERcI1DDqicxgk8KtzlZZvUHx32H1UnWVA7W6QI8Gvvxwxiir0iWbbgf9lo5LOkgEvzpfiyZcwADXabTBFU2y83_-ovZ4WihZXOCJ-ZhKCguK7_xvQJaaDVrVCbjKB4YYgxXyBYTYX2st8aSOe-ARW-20QnoikN7qrpzam9QQvqbAxidVt1c5Gw6tmmn8LCzRb", 
+              link: "/products?category=tech" 
+            },
+            { 
+              title: "Fashion", 
+              img: "https://lh3.googleusercontent.com/aida-public/AB6AXuAogO9w9FGXtQ5_ueTVMaY9Na3X2_URRO5zqqRVwd0KkzZG3NkzviHo_Idw5_1l1oXHtm8CP2-jok1K90zuX6CK_B42NlUtTiJcfwxfjoOgc09jWcL-_ZZMsqQ6M7aNlaoYywD__XwXyfMhmmgwTS1k65vsZlAhiViLl4IbU5oXMjcEO-vG-fTG2xpKGLTQfMY6n9CBeW-0wkh7TldqfRzf-nW8_tdkpW8yXD3_cPYBzm1rgEKdW4Pd", 
+              link: "/products?category=fashion" 
+            },
+            { 
+              title: "Accessories", 
+              img: "https://lh3.googleusercontent.com/aida-public/AB6AXuAANKf7Z8THc2bybIRTprCpkfGkTCzZS_EwL7iBrkIBTqRdpjKvyuQSzMZ9_TjWaiobHAoDemORpgy3XP5rVi3n3GiWJ4YVZpKRgvhaPW-gTvstZTT-6WqraUARnN_1gi2A40kd_NM1YyeG3jLSBNEd2VZUKdVKkBCs62NFBw1X3B5f7vR419hq9oJu8X3my1so6Gb5iWJUSt6DYgol2rx4nt0WkyUq1M0ywzQNMaxQGGanwELGVTYO", 
+              link: "/products?category=accessories" 
+            },
+          ].map((cat, i) => (
+            <motion.div 
+              key={i}
+              initial={{ opacity: 0, y: 100 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-10%" }}
+              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+              className="sticky w-full origin-top"
+              style={{ 
+                top: `calc(10vh + ${i * 40}px)`,
+                zIndex: i + 1
+              }}
+            >
+              <Link href={cat.link} className="relative block w-full h-[60vh] md:h-[75vh] rounded-[2.5rem] overflow-hidden group shadow-[0_-10px_40px_-15px_rgba(0,0,0,0.3)] border border-outline-variant/30 bg-surface">
+                <div className="absolute inset-0 bg-cover bg-center transition-transform duration-[1.5s] group-hover:scale-105" style={{ backgroundImage: `url('${cat.img}')` }}></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-black/10"></div>
+                <div className="absolute inset-0 flex flex-col justify-end p-8 md:p-16">
+                  <span className="text-white/80 font-label-md tracking-widest uppercase mb-4 block transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">Shop Collection</span>
+                  <h3 className="font-headline-xl text-white text-4xl md:text-7xl transform translate-y-0 group-hover:-translate-y-4 transition-transform duration-500">{cat.title}</h3>
+                </div>
+              </Link>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* Trending Now / Bento Grid Section */}
+      <section className="max-w-[1440px] mx-auto px-6 py-32 bg-surface rounded-t-[3rem] mt-10 shadow-[0_-20px_60px_-15px_rgba(0,0,0,0.05)] relative">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[80%] h-[1px] bg-gradient-to-r from-transparent via-outline-variant/50 to-transparent"></div>
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          className="flex justify-between items-end mb-16"
+        >
+          <div>
+            <h2 className="font-headline-xl text-on-surface">Trending Now</h2>
+            <p className="text-on-surface-variant font-body-md mt-2">Highly-coveted pieces curated for this week.</p>
+          </div>
+          <Link href="/products" className="font-label-md text-primary flex items-center gap-2 hover:gap-3 transition-all duration-300 group">
+            View All <span className="material-symbols-outlined transition-transform group-hover:translate-x-1">arrow_forward</span>
+          </Link>
+        </motion.div>
+
+        {isLoading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+            {[...Array(4)].map((_, i) => (
+              <ProductSkeleton key={i} />
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+            {trendingProducts.length > 0 ? (
+              trendingProducts.map((product, index) => (
+                <motion.div 
+                  initial={{ opacity: 0, y: 40 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-50px" }}
+                  transition={{ delay: index * 0.1, duration: 0.5, ease: "easeOut" }}
+                  key={product.id} 
+                  className="group cursor-pointer flex flex-col"
+                >
+                  <Link href={`/products/${product.slug}`} className="flex-1 flex flex-col">
+                    <div className="relative aspect-[4/5] rounded-2xl overflow-hidden bg-surface-container-low mb-6 soft-shadow">
+                      {product.images && product.images.length > 0 ? (
+                        <Image 
+                          src={product.images[0]} 
+                          alt={product.name}
+                          fill
+                          className="object-cover transition-transform duration-700 group-hover:scale-110"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-on-surface-variant/50">No image</div>
+                      )}
+                      <button 
+                        onClick={(e) => {
+                          e.preventDefault();
+                          addItem({
+                            id: product.id,
+                            name: product.name,
+                            price: product.price,
+                            quantity: 1,
+                            image: product.images?.[0] || ''
+                          });
+                          toast.success(`${product.name} added to cart`, {
+                            action: {
+                              label: 'View Cart',
+                              onClick: () => setCartOpen(true)
+                            },
+                          });
+                        }}
+                        className="absolute bottom-4 right-4 w-12 h-12 bg-surface rounded-full flex items-center justify-center shadow-lg md:opacity-0 md:translate-y-4 md:group-hover:opacity-100 md:group-hover:translate-y-0 transition-all duration-300 z-10 hover:bg-primary hover:text-white active:scale-90 text-on-surface"
+                      >
+                        <ShoppingCart className="w-5 h-5" />
+                      </button>
+                    </div>
+                    <div className="flex justify-between items-start gap-4">
+                      <h3 className="font-body-md font-semibold text-on-surface group-hover:text-primary transition-colors line-clamp-1">{product.name}</h3>
+                      <p className="text-on-surface font-label-md">${product.price.toFixed(2)}</p>
+                    </div>
+                  </Link>
+                </motion.div>
+              ))
+            ) : (
+              <div className="col-span-4 text-center py-20 text-on-surface-variant font-body-md border border-dashed border-outline-variant/50 rounded-2xl">
+                No trending products available at the moment.
+              </div>
+            )}
+          </div>
+        )}
+      </section>
+
+      {/* The Private Club (Newsletter) */}
+      <section className="bg-surface-container-low border-y border-outline-variant/30 py-32 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent"></div>
+        <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
+            <span className="font-label-md text-primary uppercase tracking-[0.3em] mb-6 block">The Inner Circle</span>
+            <h2 className="font-display-sm text-on-surface mb-6 text-4xl md:text-5xl">Unparalleled access.</h2>
+            <p className="font-body-lg text-on-surface-variant mb-12 text-lg md:text-xl max-w-2xl mx-auto">
+              Join the LUXE private registry to unlock early access to our seasonal drops, exclusive members-only hardware, and curated architectural insights.
+            </p>
+            <form className="flex flex-col sm:flex-row gap-4 justify-center max-w-[512px] mx-auto" onSubmit={(e) => { e.preventDefault(); toast.success('Welcome to the inner circle.'); }}>
+              <input 
+                type="email" 
+                placeholder="Enter your email address" 
+                required
+                className="flex-1 bg-surface border border-outline-variant/50 rounded-xl px-6 py-4 font-body-md text-on-surface focus:outline-none focus:border-primary transition-colors"
+              />
+              <button 
+                type="submit"
+                className="bg-primary text-on-primary px-8 py-4 rounded-xl font-label-md hover:bg-primary-container hover:text-on-primary-container active:scale-95 transition-all shadow-lg shadow-primary/20 whitespace-nowrap"
+              >
+                Request Access
+              </button>
+            </form>
+          </motion.div>
+        </div>
+      </section>
+    </div>
   );
 }

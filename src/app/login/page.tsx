@@ -29,7 +29,7 @@ export default function LoginPage() {
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md bg-white/5 border border-white/10 rounded-2xl p-8 backdrop-blur-sm"
+        className="w-full max-w-[448px] bg-white/5 border border-white/10 rounded-2xl p-8 backdrop-blur-sm"
       >
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold tracking-tight mb-2">Welcome Back</h1>

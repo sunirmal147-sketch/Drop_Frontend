@@ -2,38 +2,92 @@
 
 import Link from 'next/link';
 import { useAuthStore } from '../store/authStore';
-import { ShoppingCart, User, LogOut } from 'lucide-react';
+import { useCartStore } from '../store/cartStore';
+import { ShoppingCart, LogOut, Search, Heart, User } from 'lucide-react';
+import { ThemeToggle } from './ThemeToggle';
+import { motion } from 'framer-motion';
+import { useState } from 'react';
+import Image from 'next/image';
+import { toast } from 'sonner';
 
 export default function Navbar() {
   const { isAuthenticated, user, logout } = useAuthStore();
+  const { setCartOpen, items } = useCartStore();
+  const [searchOpen, setSearchOpen] = useState(false);
+
+  const cartItemCount = items.reduce((total, item) => total + item.quantity, 0);
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b border-white/10 bg-black/50 backdrop-blur-md">
-      <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-        <div className="flex items-center gap-8">
-          <Link href="/" className="text-xl font-bold tracking-tighter text-white">
-            DROP
+    <motion.nav 
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+      className="sticky top-0 z-50 w-full bg-surface/80 backdrop-blur-xl border-b border-outline-variant/30 transition-all duration-200 ease-in-out"
+    >
+      <div className="flex justify-between items-center px-4 md:px-6 py-4 max-w-[1440px] mx-auto">
+        <div className="flex items-center gap-10">
+          <Link href="/" className="font-headline-lg text-[28px] font-bold tracking-tighter text-on-surface">
+            LUXE
           </Link>
-          <div className="hidden md:flex items-center gap-6 text-sm font-medium text-gray-300">
-            <Link href="/products" className="hover:text-white transition-colors">Products</Link>
-            <Link href="/categories" className="hover:text-white transition-colors">Categories</Link>
-            <Link href="/deals" className="hover:text-white transition-colors">Deals</Link>
+          <div className="hidden md:flex items-center gap-6">
+            <Link href="/products" className="font-body-md text-on-surface-variant hover:text-primary transition-colors duration-300">
+              Products
+            </Link>
+            <Link href="/deals" className="font-body-md text-on-surface-variant hover:text-primary transition-colors duration-300">
+              Deals
+            </Link>
+            <Link href="/rewards" className="font-body-md text-on-surface-variant hover:text-primary transition-colors duration-300">
+              Rewards
+            </Link>
+            <Link href="/about" className="font-body-md text-on-surface-variant hover:text-primary transition-colors duration-300">
+              About Us
+            </Link>
           </div>
         </div>
 
-        <div className="flex items-center gap-4">
-          <Link href="/cart" className="p-2 text-gray-300 hover:text-white transition-colors">
+        <div className="flex items-center gap-4 md:gap-6">
+          <div className="hidden sm:flex relative">
+            <div className={`flex items-center bg-surface-container-low rounded-full px-4 py-2 border border-outline-variant transition-all ${searchOpen ? 'w-64' : 'w-48'}`}>
+              <Search className="text-on-surface-variant text-[20px] w-5 h-5 mr-2" />
+              <input 
+                className="bg-transparent border-none focus:ring-0 text-label-md w-full outline-none placeholder:text-on-surface-variant/70 text-on-surface" 
+                placeholder="Search..." 
+                type="text"
+                onFocus={() => setSearchOpen(true)}
+                onBlur={() => setSearchOpen(false)}
+              />
+            </div>
+          </div>
+
+          <ThemeToggle />
+          
+          <button 
+            onClick={() => toast('Favorites page coming soon!', { icon: '❤️' })}
+            className="text-on-surface-variant hover:text-primary transition-colors"
+          >
+            <Heart className="w-5 h-5" />
+          </button>
+
+          <button 
+            onClick={() => setCartOpen(true)}
+            className="relative text-on-surface-variant hover:text-primary transition-colors"
+          >
             <ShoppingCart className="w-5 h-5" />
-          </Link>
+            {cartItemCount > 0 && (
+              <span className="absolute -top-2 -right-2 bg-primary text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full">
+                {cartItemCount}
+              </span>
+            )}
+          </button>
           
           {isAuthenticated ? (
-            <div className="flex items-center gap-4">
-              <span className="text-sm text-gray-400 hidden sm:inline-block">
-                Hi, {user?.name?.split(' ')[0]}
-              </span>
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full overflow-hidden border border-outline-variant bg-primary-container flex items-center justify-center">
+                <span className="text-on-primary-container font-label-md">{user?.name?.charAt(0).toUpperCase()}</span>
+              </div>
               <button 
                 onClick={() => logout()}
-                className="p-2 text-gray-300 hover:text-white transition-colors"
+                className="text-on-surface-variant hover:text-primary transition-colors"
                 title="Logout"
               >
                 <LogOut className="w-5 h-5" />
@@ -43,20 +97,14 @@ export default function Navbar() {
             <div className="flex items-center gap-3">
               <Link 
                 href="/login" 
-                className="text-sm font-medium text-gray-300 hover:text-white transition-colors"
+                className="w-8 h-8 rounded-full overflow-hidden border border-outline-variant bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-primary hover:border-primary transition-all"
               >
-                Log in
-              </Link>
-              <Link 
-                href="/register" 
-                className="text-sm font-medium bg-white text-black px-4 py-2 rounded-full hover:bg-gray-200 transition-colors"
-              >
-                Sign up
+                <User className="w-4 h-4" />
               </Link>
             </div>
           )}
         </div>
       </div>
-    </nav>
+    </motion.nav>
   );
 }

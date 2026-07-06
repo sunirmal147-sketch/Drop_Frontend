@@ -36,7 +36,7 @@ export default function RegisterPage() {
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="w-full max-w-md bg-green-500/10 border border-green-500/30 rounded-2xl p-8 text-center"
+          className="w-full max-w-[448px] bg-green-500/10 border border-green-500/30 rounded-2xl p-8 text-center"
         >
           <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
             <svg className="w-8 h-8 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -58,7 +58,7 @@ export default function RegisterPage() {
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md bg-white/5 border border-white/10 rounded-2xl p-8 backdrop-blur-sm"
+        className="w-full max-w-[448px] bg-white/5 border border-white/10 rounded-2xl p-8 backdrop-blur-sm"
       >
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold tracking-tight mb-2">Create Account</h1>
